@@ -73,4 +73,68 @@ class Main {
     static int[][] Next = new int[Valor][Valor];
 
     
+    /*---------------------------- Funcion de inicio y arrays----------------------------*/
+    static void inicio(int V, int[][] grafo) {
+        
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                dis[i][j] = grafo[i][j];
 
+                // --------- Sin borde entre nodo [i] & [j] --------------
+                if (grafo[i][j] == Informacion)
+                    Next[i][j] = -1;
+                else
+                    Next[i][j] = j;
+            }
+        }
+    }
+
+    /*----------------- Encontrar el camino mas corto entre [U] & [V] --------------------*/
+    static Vector<Integer> constructPath(int u, int v) {
+        
+        /* Si no se encuentra ningun relacion entre [U] & [V], se retorna un array vacio */
+        if (Next[u][v] == -1)
+            return null;
+            
+            // --------- Guardado del path en un vector ---------
+            Vector<Integer> path = new Vector<Integer>(); 
+            path.add(u);
+
+            while (u != v) {
+                u = Next[u][v];
+                path.add(u);
+            }
+            return path;
+    }
+
+    static void floydWarshall(int V) {
+        
+        for (int k = 0; k < V; k++) {
+            for (int i = 0; i < V; i++) {
+                for (int j = 0; j < V; j++) {
+
+                    // --------- No puede correr a traves de un nodo que aun no existe ---------
+                    if (dis[i][k] == Informacion ||
+                            dis[k][j] == Informacion)
+                        continue;
+
+                    if (dis[i][j] > dis[i][k] +
+                            dis[k][j]) {
+                        dis[i][j] = dis[i][k] +
+                                dis[k][j];
+                        Next[i][j] = Next[i][k];
+                    }
+                }
+            }
+        }
+    }
+
+    /*------------- funcion para imprimir la ruta mas corta --------------*/
+    static void printPath(Vector<Integer> path) {
+        int n = path.size();
+        for (int i = 0; i < n - 1; i++)
+            System.out.print(path.get(i) + " a ");
+            System.out.print(path.get(n - 1) + "\n");
+    }
+
+}
